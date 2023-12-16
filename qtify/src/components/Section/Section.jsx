@@ -1,12 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import Card from "../Card/Card";
 import Carousel from "../Carousel/Carousel";
 import styles from "./Section.module.css";
+import Filters from "../Filters/Filters";
 
-export default function Section({ title, data, type }) {
+export default function Section({ title, data, type, filterSource }) {
+    const [filters, setFilters] = useState([{key: "all", label: "All"}])
+    const [selectedFilterIndex, setSelectedFilterIndex] = useState(0);
     const [carouselToggle, setCarouselToggle] = useState(true);
 
+    useEffect(() => {
+        if(filterSource) {
+            filterSource().then((response) => {
+                const {data} = response;
+                setFilters([...filters, ...data]);
+            })
+        }
+    }, [])
+
+    const showFilters = filters.length > 1;
+    const cardsToRender = data?.filter((card) => 
+        showFilters && selectedFilterIndex !== 0 ? card.genre.key === filters[selectedFilterIndex].key: card
+    )
+    
     const handleToggle = () => {
         setCarouselToggle((prevState) => !prevState);
     }
@@ -19,6 +36,17 @@ export default function Section({ title, data, type }) {
                 </h4>
             </div>
             {
+                showFilters && (
+                    <div className={styles.filterWrapper}>
+                        <Filters 
+                            filters={filters}
+                            selectedFilterIndex={selectedFilterIndex}
+                            setSelectedFilterIndex={setSelectedFilterIndex}
+                        />
+                    </div>
+                )
+            }
+            {
                 data.length === 0 ? (
                     <CircularProgress />
                 ):  (
@@ -27,14 +55,14 @@ export default function Section({ title, data, type }) {
                                 !carouselToggle ? (
                                     <div className={styles.wrapper}>
                                         {
-                                            data.data.map((ele) => (
+                                            cardsToRender.map((ele) => (
                                                 <Card data={ele} type={type} />
                                             ))
                                         }
                                     </div>
                                 ): (
                                     <Carousel 
-                                        data={data}
+                                        data={cardsToRender}
                                         renderComponent={(data) => <Card data={data} type={type} />} >
 
                                     </Carousel>

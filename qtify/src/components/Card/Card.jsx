@@ -4,7 +4,6 @@ import {Tooltip, Chip} from '@mui/material';
 import { Link } from 'react-router-dom';
 
 function Card({data, type}){
-
     const getCard = (type) => {
         // eslint-disable-next-line default-case
         switch(type) {
@@ -29,7 +28,7 @@ function Card({data, type}){
                     </Tooltip>
                 )
             }
-            case "song": {
+            case "songs": {
                 const {image, likes, title} = data;
                 return (
                     <div className={styles.wrapper}>

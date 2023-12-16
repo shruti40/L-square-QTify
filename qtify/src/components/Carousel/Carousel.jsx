@@ -29,7 +29,7 @@ function Carousel({ data, renderComponent }) {
                 <CarouselLeftNavigation />
                 <CarouselRightNavigation />
                 {
-                    data.data.map((ele) => (
+                    data.map((ele) => (
                         <SwiperSlide>{renderComponent(ele)}</SwiperSlide>
                     ))
                 }
