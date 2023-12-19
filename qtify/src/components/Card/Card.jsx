@@ -10,7 +10,7 @@ function Card({data, type}){
             case "album": {
                 const {image, follows, songs, title, slug} = data;
                 return (
-                    <Tooltip tile={`${songs.length} songs`} placement="top" arrow>
+          <          <Tooltip title={`${songs.length} songs`} placement="top" arrow>
                         <Link to={`/album/${slug}`}>
                             <div className={styles.wrapper}>
                                 <div styles={styles.card}>
